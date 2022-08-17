@@ -10,8 +10,10 @@
     "serverstart": "DEBUG=memories-app:* npm run dev"
   },
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
+    "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
     "mongodb": "^4.8.1",
     "mongoose": "^6.5.2"
