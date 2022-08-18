@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 const postSchema = new mongoose.Schema(
   {
     title: { required: true, type: String },
-    author: { type: String, ref: 'User', required: true },
+    author: { type: mongoose.Types.ObjectId, ref: 'User', required: true },
   },
   { timestamps: true },
 );

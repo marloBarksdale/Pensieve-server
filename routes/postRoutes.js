@@ -1,11 +1,12 @@
 import express from 'express';
+import { auth } from '../middleware/auth.js';
 import Post from '../models/postModel.js';
 
 const router = express.Router();
 
-router.post('/', async (req, res, next) => {
+router.post('/', auth, async (req, res, next) => {
   try {
-    const post = await new Post(req.body).save();
+    const post = await new Post({ ...req.body, author: req.user._id }).save();
 
     res.status(201).send(post);
   } catch (error) {
