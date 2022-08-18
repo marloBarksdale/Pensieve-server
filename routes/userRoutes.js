@@ -33,4 +33,15 @@ router.post('/login', async (req, res, next) => {
   } catch (error) {}
 });
 
+router.post('/logout', auth, async (req, res, next) => {
+  try {
+    req.user.tokens = req.user.tokens.filter(
+      (token) => token.token !== req.token,
+    );
+
+    await req.user.save();
+    res.send('Logged out');
+  } catch (error) {}
+});
+
 export default router;
