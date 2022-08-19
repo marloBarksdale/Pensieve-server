@@ -16,6 +16,7 @@ app.use(Express.json());
 app.use(Express.urlencoded({ extended: true }));
 app.use('/posts', postRouter);
 app.use(userRouter);
+app.use('/', postRouter);
 mongoose
   .connect(process.env.MONGODB, { dbName: 'pensieve' })
   .then(() => {
