@@ -18,6 +18,20 @@ export const addPost = async (req, res, next) => {
   }
 };
 
+export const getPost = async (req, res, next) => {
+  try {
+    const post = await Post.findById(req.params.id);
+
+    if (!post) {
+      return res.status(404).send('Post not found');
+    }
+
+    return res.send(post);
+  } catch (error) {
+    res.status(500).send();
+  }
+};
+
 export const deletePost = async (req, res, next) => {
   try {
     const id = req.params.id; //Retrieve id from params

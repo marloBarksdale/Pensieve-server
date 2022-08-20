@@ -2,6 +2,7 @@ import express from 'express';
 import {
   addPost,
   deletePost,
+  getPost,
   getPosts,
 } from '../controllers/postControllers.js';
 import { auth } from '../middleware/auth.js';
@@ -12,6 +13,8 @@ const router = express.Router();
 router.post('/', auth, addPost);
 
 router.get('/', auth, getPosts);
+
+router.get('/:id', auth, getPost);
 
 router.delete('/:id', auth, deletePost);
 

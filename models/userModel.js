@@ -24,10 +24,12 @@ userSchema.methods.generateAuthToken = async function () {
 userSchema.pre('save', async function (next) {
   const user = this;
   if (user.isModified('password')) {
+    //Hash new passwords
     user.password = await bcrypt.hash(user.password, 12);
   }
 
   if (user.isModified('tokens')) {
+    //Clear tokens whenevr the user model is saved and tokens have been modified
     user.tokens = user.tokens.filter((token) => {
       return (
         Math.floor(new Date().getTime() / 1000) < jwt.decode(token.token).exp
