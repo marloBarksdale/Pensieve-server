@@ -27,6 +27,14 @@ userSchema.pre('save', async function (next) {
     user.password = await bcrypt.hash(user.password, 12);
   }
 
+  if (user.isModified('tokens')) {
+    user.tokens = user.tokens.filter((token) => {
+      return (
+        Math.floor(new Date().getTime() / 1000) < jwt.decode(token.token).exp
+      );
+    });
+  }
+
   next();
 });
 const User = mongoose.model('User', userSchema);
