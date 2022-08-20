@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import mongoose from 'mongoose';
 import User from '../models/userModel.js';
 
 export const auth = async (req, res, next) => {
@@ -17,6 +18,11 @@ export const auth = async (req, res, next) => {
     }
     req.token = token;
     req.user = user;
+
+    if (req.params.id)
+      if (!mongoose.Types.ObjectId.isValid(req.params.id))
+        return res.status(404).send('Not found');
+
     next();
   } catch (error) {
     res.status(401).send({ error: 'Please Authenticate' });

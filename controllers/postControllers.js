@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import Post from '../models/postModel.js';
 
 export const getPosts = async (req, res, next) => {
@@ -34,6 +35,7 @@ export const getPost = async (req, res, next) => {
 
 export const updatePost = async (req, res, next) => {
   const id = req.params.id;
+
   const post = await Post.findById(req.params.id);
 
   if (post.author.toString() !== req.user._id.toString()) {
