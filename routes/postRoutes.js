@@ -4,6 +4,7 @@ import {
   deletePost,
   getPost,
   getPosts,
+  updatePost,
 } from '../controllers/postControllers.js';
 import { auth } from '../middleware/auth.js';
 import Post from '../models/postModel.js';
@@ -15,6 +16,8 @@ router.post('/', auth, addPost);
 router.get('/', auth, getPosts);
 
 router.get('/:id', auth, getPost);
+
+router.patch('/:id', auth, updatePost);
 
 router.delete('/:id', auth, deletePost);
 

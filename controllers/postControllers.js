@@ -32,6 +32,25 @@ export const getPost = async (req, res, next) => {
   }
 };
 
+export const updatePost = async (req, res, next) => {
+  const id = req.params.id;
+  const post = await Post.findById(req.params.id);
+
+  if (post.author.toString() !== req.user._id.toString()) {
+    return res.status(403).send('You cannot perform this action');
+  }
+
+  const newPost = await Post.findByIdAndUpdate(
+    id,
+    { ...req.body },
+    {
+      new: true,
+    },
+  );
+  console.log(newPost);
+  res.send(newPost);
+};
+
 export const deletePost = async (req, res, next) => {
   try {
     const id = req.params.id; //Retrieve id from params
