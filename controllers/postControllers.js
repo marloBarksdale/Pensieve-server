@@ -55,6 +55,25 @@ export const updatePost = async (req, res, next) => {
     return res.status(403).send('You cannot perform this action');
   }
 
+  let image = {};
+  if (req.file) {
+    image = await Image.findById(post?.image?._id);
+
+    if (image) {
+      const s3Params = { Bucket: process.env.BUCKET, Key: image.imageKey };
+      await s3.deleteObject(s3Params).promise();
+      await Image.findByIdAndDelete(image._id);
+    }
+
+    image = new Image({
+      imageUrl: req.file.location,
+      imageKey: req.file.key,
+    });
+
+    await image.save();
+    req.body.image = image._id;
+  }
+
   const newPost = await Post.findByIdAndUpdate(
     id,
     { ...req.body },
