@@ -1,4 +1,6 @@
 import express from 'express';
+import '../index.js';
+
 import {
   addPost,
   deletePost,
@@ -7,11 +9,11 @@ import {
   updatePost,
 } from '../controllers/postControllers.js';
 import { auth } from '../middleware/auth.js';
-import Post from '../models/postModel.js';
+// import { upload } from '../index.js';
 
 const router = express.Router();
 
-router.post('/', auth, addPost);
+router.post('/', addPost);
 
 router.get('/', auth, getPosts);
 

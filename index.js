@@ -9,6 +9,8 @@ import userRouter from './routes/userRoutes.js';
 import S3 from 'aws-sdk/clients/s3.js';
 import multer from 'multer';
 import multerS3 from 'multer-s3';
+import sharp from 'sharp';
+import { auth } from './middleware/auth.js';
 
 debug('pensieve-app:server');
 
@@ -29,6 +31,18 @@ const fileFilter = (req, file, cb) => {
   cb(undefined, true);
 };
 
+const avatarUpload = multer({
+  fileFilter,
+  storage: multerS3({
+    s3,
+    acl: 'public-read',
+    bucket: process.env.AVATAR_BUCKET,
+    key: function (req, file, cb) {
+      cb(null, 'avatar-' + new Date().toISOString() + '-' + file.originalname);
+    },
+  }),
+});
+
 const upload = multer({
   fileFilter,
   storage: multerS3({
@@ -44,9 +58,9 @@ const upload = multer({
 app.use(logger('dev'));
 app.use(Express.json());
 app.use(Express.urlencoded({ extended: true }));
-app.use(upload.single('image'));
-app.use('/posts', postRouter);
-app.use(userRouter);
+
+app.use('/posts', upload.single('image'), auth, postRouter);
+app.use('/user', avatarUpload.single('avatar'), userRouter);
 app.use('/', postRouter);
 mongoose
   .connect(process.env.MONGODB, { dbName: 'pensieve' })
@@ -58,9 +72,3 @@ mongoose
   })
 
   .catch((error) => console.log(error.message));
-
-const post = async () => {
-  const message = new Post({ title: 'Hello', author: 'John' });
-
-  await message.save();
-};

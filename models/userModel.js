@@ -8,6 +8,7 @@ const userSchema = mongoose.Schema({
   email: { type: String, trim: true, unique: true },
   password: { type: String, required: true },
   tokens: [{ token: { type: String, required: true } }],
+  avatar: { type: mongoose.Types.ObjectId, ref: 'Image' },
 });
 
 userSchema.methods.generateAuthToken = async function () {

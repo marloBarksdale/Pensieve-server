@@ -24,6 +24,7 @@ export const addPost = async (req, res, next) => {
     }
 
     req.body.image = image?._id;
+
     const post = await new Post({ ...req.body, author: req.user._id }).save();
     await post.populate('image');
     res.status(201).send(post);

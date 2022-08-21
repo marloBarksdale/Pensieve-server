@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import mongoose from 'mongoose';
+
 import User from '../models/userModel.js';
 
 export const auth = async (req, res, next) => {
@@ -28,6 +29,4 @@ export const auth = async (req, res, next) => {
   } catch (error) {
     res.status(401).send({ error: 'Please Authenticate' });
   }
-
-  //console.log('middlewear');
 };
