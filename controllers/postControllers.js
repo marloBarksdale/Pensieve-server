@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import Image from '../models/imageModel.js';
 import Post from '../models/postModel.js';
 
 export const getPosts = async (req, res, next) => {
@@ -11,8 +12,19 @@ export const getPosts = async (req, res, next) => {
 
 export const addPost = async (req, res, next) => {
   try {
-    const post = await new Post({ ...req.body, author: req.user._id }).save();
+    let image = {};
+    if (req.file) {
+      image = new Image({
+        imageUrl: req.file.location,
+        imageKey: req.file.key,
+      });
 
+      await image.save();
+    }
+
+    req.body.image = image?._id;
+    const post = await new Post({ ...req.body, author: req.user._id }).save();
+    await post.populate('image');
     res.status(201).send(post);
   } catch (error) {
     res.status(400).status(error);

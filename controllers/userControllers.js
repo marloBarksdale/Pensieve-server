@@ -8,6 +8,9 @@ export const login = async (req, res, next) => {
     const email = req.body.email;
     const user = await User.findOne({ email });
 
+    if (!user) {
+      return res.status(404).send('Incorrect username or password');
+    }
     const loggedIn = await bcrypt.compare(req.body.password, user.password);
 
     if (loggedIn) {
@@ -33,6 +36,12 @@ export const logout = async (req, res, next) => {
 
 export const signup = async (req, res, next) => {
   try {
+    const exists = await User.findOne({ email: req.body.email });
+
+    if (exists) {
+      return res.status(400).send('Cannot signup using that email');
+    }
+
     const user = await new User(req.body).save();
 
     const token = await user.generateAuthToken();

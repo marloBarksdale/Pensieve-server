@@ -4,8 +4,8 @@ import User from '../models/userModel.js';
 
 export const auth = async (req, res, next) => {
   try {
-    const token = req.header('Authorization').replace('Bearer ', '');
-    console.log(token);
+    const token = req.header('Authorization').replace('Bearer ', ''); //Extract the token from the Authorization header
+
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     const user = await User.findOne({
@@ -21,6 +21,7 @@ export const auth = async (req, res, next) => {
 
     if (req.params.id)
       if (!mongoose.Types.ObjectId.isValid(req.params.id))
+        //Confirm that the id is valid
         return res.status(404).send('Not found');
 
     next();
