@@ -14,7 +14,7 @@ debug('pensieve-app:server');
 
 const app = Express();
 
-const s3 = new S3({
+export const s3 = new S3({
   credentials: {
     accessKeyId: process.env.AWSID,
     secretAccessKey: process.env.AWSSECRET,

@@ -10,10 +10,10 @@ const imageSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-imageSchema.virtual('tires', {
+imageSchema.virtual('posts', {
   localField: '_id',
   foreignField: 'image',
-  ref: 'Tire',
+  ref: 'Post',
 });
 
 const Image = mongoose.model('Image', imageSchema);

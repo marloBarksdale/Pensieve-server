@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { s3 } from '../index.js';
 import Image from '../models/imageModel.js';
 import Post from '../models/postModel.js';
 
@@ -75,6 +76,14 @@ export const deletePost = async (req, res, next) => {
       return res.status(404).send('Not found');
     } else if (post.author.toString() !== req.user._id.toString()) {
       return res.status(403).send('You cannot perform this action');
+    }
+
+    const image = await Image.findById(post?.image?._id);
+
+    if (image) {
+      const s3Params = { Bucket: process.env.BUCKET, Key: image.imageKey };
+      await s3.deleteObject(s3Params).promise();
+      await Image.findByIdAndDelete(image._id);
     }
 
     const toDelete = await Post.findByIdAndDelete(id);
