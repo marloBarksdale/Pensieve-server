@@ -8,7 +8,7 @@ import postRouter from './routes/postRoutes.js';
 import userRouter from './routes/userRoutes.js';
 import S3 from 'aws-sdk/clients/s3.js';
 import multer from 'multer';
-import multerS3 from 'multer-s3';
+import multerS3 from 'multer-sharp-s3';
 import sharp from 'sharp';
 import { auth } from './middleware/auth.js';
 
@@ -35,9 +35,12 @@ const avatarUpload = multer({
   fileFilter,
   storage: multerS3({
     s3,
-    acl: 'public-read',
-    bucket: process.env.AVATAR_BUCKET,
-    key: function (req, file, cb) {
+
+    resize: { height: 400, width: 400, options: { fit: 'inside' } },
+
+    ACL: 'public-read',
+    Bucket: process.env.AVATAR_BUCKET,
+    Key: function (req, file, cb) {
       cb(null, 'avatar-' + new Date().toISOString() + '-' + file.originalname);
     },
   }),
@@ -47,9 +50,9 @@ const upload = multer({
   fileFilter,
   storage: multerS3({
     s3,
-    acl: 'public-read',
-    bucket: process.env.BUCKET,
-    key: function (req, file, cb) {
+    ACL: 'public-read',
+    Bucket: process.env.BUCKET,
+    Key: function (req, file, cb) {
       cb(null, new Date().toISOString() + '-' + file.originalname);
     },
   }),
