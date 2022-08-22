@@ -6,15 +6,11 @@ const imageSchema = new mongoose.Schema(
       type: String,
     },
     imageKey: { type: String },
+    post: { type: mongoose.Types.ObjectId, ref: 'Post' },
+    user: { type: mongoose.Types.ObjectId, ref: 'User' },
   },
   { timestamps: true },
 );
-
-imageSchema.virtual('posts', {
-  localField: '_id',
-  foreignField: 'image',
-  ref: 'Post',
-});
 
 const Image = mongoose.model('Image', imageSchema);
 

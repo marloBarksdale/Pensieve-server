@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
+import Image from './imageModel.js';
 
 const userSchema = mongoose.Schema({
   first_name: { type: String, required: true, trim: true },
@@ -22,11 +23,26 @@ userSchema.methods.generateAuthToken = async function () {
   return token;
 };
 
+userSchema.virtual('posts', {
+  ref: 'Post',
+  foreignField: 'author',
+  localField: '_id',
+});
+
 userSchema.pre('save', async function (next) {
   const user = this;
   if (user.isModified('password')) {
     //Hash new passwords
     user.password = await bcrypt.hash(user.password, 12);
+  }
+
+  if (user.isModified('avatar')) {
+    //If the user model has a valid avatar field then place the user id on the imagge "user" field
+    if (mongoose.isValidObjectId(user.avatar)) {
+      const image = await Image.findById(user.avatar);
+      image.user = user._id;
+      await image.save();
+    }
   }
 
   if (user.isModified('tokens')) {

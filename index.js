@@ -62,7 +62,7 @@ app.use(logger('dev'));
 app.use(Express.json());
 app.use(Express.urlencoded({ extended: true }));
 
-app.use('/posts', upload.single('image'), auth, postRouter);
+app.use('/posts', auth, upload.single('image'), postRouter);
 app.use('/user', avatarUpload.single('avatar'), userRouter);
 app.use('/', postRouter);
 mongoose

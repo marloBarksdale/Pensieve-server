@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import { s3 } from '../index.js';
 import Image from '../models/imageModel.js';
 import Post from '../models/postModel.js';
+import User from '../models/userModel.js';
 
 export const getPosts = async (req, res, next) => {
   try {
@@ -26,7 +27,8 @@ export const addPost = async (req, res, next) => {
     req.body.image = image?._id;
 
     const post = await new Post({ ...req.body, author: req.user._id }).save();
-    await post.populate('image');
+    await post.save();
+
     res.status(201).send(post);
   } catch (error) {
     res.status(400).status(error);
