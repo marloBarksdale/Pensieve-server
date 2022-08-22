@@ -4,6 +4,7 @@ import User from '../models/userModel.js';
 import bcrypt from 'bcrypt';
 import Image from '../models/imageModel.js';
 import { s3 } from '../index.js';
+import mongoose from 'mongoose';
 
 export const login = async (req, res, next) => {
   try {
@@ -41,44 +42,67 @@ export const update = async (req, res, next) => {
     //prevent any updates to email field
     delete req.body.email;
   }
+  try {
+    const user = req.user;
 
-  const user = req.user;
+    let image = {};
+    if (req.file) {
+      image = new Image({
+        imageUrl: req.file.location,
+        imageKey: req.file.key,
+        user: req.user._id,
+      });
+      await image.save();
 
-  let image = {};
-  if (req.file) {
-    image = new Image({
-      imageUrl: req.file.location,
-      imageKey: req.file.key,
-    });
-    await image.save();
+      if (user.avatar) {
+        const currentImage = await Image.findById(user.avatar._id);
 
-    const currentImage = await Image.findById(user.avatar._id);
+        if (currentImage) {
+          const s3Params = {
+            Bucket: process.env.AVATAR_BUCKET,
+            Key: currentImage.imageKey,
+          };
+          await s3.deleteObject(s3Params).promise();
+          await Image.findByIdAndDelete(currentImage._id);
+        }
+      }
 
-    if (currentImage) {
-      const s3Params = {
-        Bucket: process.env.AVATAR_BUCKET,
-        Key: currentImage.imageKey,
-      };
-      await s3.deleteObject(s3Params).promise();
-      await Image.findByIdAndDelete(currentImage._id);
+      req.body.avatar = image._id;
     }
 
-    req.body.avatar = image._id;
-  }
+    const updatedUser = await User.findByIdAndUpdate(
+      user._id,
+      { ...req.body },
+      { new: true },
+    );
 
-  const updatedUser = await User.findByIdAndUpdate(
-    user._id,
-    { ...req.body },
-    { new: true },
-  );
+    res.send(updatedUser);
+  } catch (error) {}
+};
 
-  res.send(updatedUser);
+export const deleteAvatar = async (req, res, next) => {
+  try {
+    const exists = await Image.findById(req.user.avatar);
+
+    if (!exists) {
+      return res.status(400).send('No avatar found');
+    }
+
+    const s3Params = {
+      Bucket: process.env.AVATAR_BUCKET,
+      Key: exists.imageKey,
+    };
+    req.user.avatar = undefined;
+    await req.user.save();
+    await s3.deleteObject(s3Params).promise();
+    await Image.findByIdAndDelete(exists._id);
+
+    res.send(req.user);
+  } catch (error) {}
 };
 
 export const signup = async (req, res, next) => {
-  console.log(req.body);
   try {
-    console.log(req.body.email);
     const exists = await User.findOne({ email: req.body.email });
 
     if (exists) {

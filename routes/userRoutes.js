@@ -3,6 +3,7 @@ import { auth } from '../middleware/auth.js';
 import User from '../models/userModel.js';
 import bcrypt from 'bcrypt';
 import {
+  deleteAvatar,
   login,
   logout,
   signup,
@@ -15,6 +16,8 @@ router.post('/signup', signup);
 router.post('/login', login);
 
 router.post('/logout', auth, logout);
+
+router.delete('/avatar', auth, deleteAvatar);
 
 router.patch('/', auth, update);
 
