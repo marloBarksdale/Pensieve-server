@@ -54,6 +54,10 @@ export const updatePost = async (req, res, next) => {
 
   const post = await Post.findById(req.params.id);
 
+  if (!post) {
+    return res.status(404).send('Post not found');
+  }
+
   if (post.author.toString() !== req.user._id.toString()) {
     return res.status(403).send('You cannot perform this action');
   }
@@ -71,6 +75,7 @@ export const updatePost = async (req, res, next) => {
     image = new Image({
       imageUrl: req.file.location,
       imageKey: req.file.key,
+      post: post._id,
     });
 
     await image.save();
