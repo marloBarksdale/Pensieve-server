@@ -98,8 +98,18 @@ export const likePost = async (req, res, next) => {
   try {
     const post = await Post.findById(id);
 
-    // post.likes.find((like) => like._id.toString() === req.user._id.toString());
-    post.likes.push(req.user._id);
+    const hasLiked = post.likes.find(
+      (like) => like.toString() === req.user._id.toString(),
+    );
+
+    if (hasLiked) {
+      post.likes = post.likes.filter(
+        (like) => like.toString() !== req.user._id.toString(),
+      );
+    } else {
+      post.likes.push(req.user._id);
+    }
+
     await post.populate('likes', ['first_name', 'last_name']);
     await post.save();
     res.send(post);
