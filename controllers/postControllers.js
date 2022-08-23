@@ -93,6 +93,19 @@ export const updatePost = async (req, res, next) => {
   res.send(newPost);
 };
 
+export const likePost = async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    const post = await Post.findById(id);
+
+    // post.likes.find((like) => like._id.toString() === req.user._id.toString());
+    post.likes.push(req.user._id);
+    await post.populate('likes', ['first_name', 'last_name']);
+    await post.save();
+    res.send(post);
+  } catch (error) {}
+};
+
 export const deletePost = async (req, res, next) => {
   try {
     const id = req.params.id; //Retrieve id from params
@@ -105,7 +118,7 @@ export const deletePost = async (req, res, next) => {
       return res.status(403).send('You cannot perform this action');
     }
 
-    const image = await Image.findById(post?.image?._id);
+    const image = await Image.findById(post.image?._id);
 
     if (image) {
       const s3Params = { Bucket: process.env.BUCKET, Key: image.imageKey };
