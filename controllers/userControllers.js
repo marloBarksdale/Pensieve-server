@@ -137,3 +137,14 @@ export const getUsers = async (req, res, next) => {
   console.log(user);
   res.send(user);
 };
+
+export const getProfile = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.id);
+    res.send(user);
+  } catch (error) {}
+};
+
+export const getMyProfile = async (req, res, next) => {
+  res.send(req.user);
+};
