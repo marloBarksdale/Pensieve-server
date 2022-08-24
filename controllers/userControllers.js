@@ -130,3 +130,10 @@ export const signup = async (req, res, next) => {
     res.status(400).send(error);
   }
 };
+
+export const getUsers = async (req, res, next) => {
+  const user = await User.find().populate(['likes']);
+
+  console.log(user);
+  res.send(user);
+};

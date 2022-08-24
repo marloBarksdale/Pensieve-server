@@ -3,14 +3,17 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import Image from './imageModel.js';
 
-const userSchema = mongoose.Schema({
-  first_name: { type: String, required: true, trim: true },
-  last_name: { type: String, required: true, trim: true },
-  email: { type: String, trim: true, unique: true },
-  password: { type: String, required: true },
-  tokens: [{ token: { type: String, required: true } }],
-  avatar: { type: mongoose.Types.ObjectId, ref: 'Image' },
-});
+const userSchema = mongoose.Schema(
+  {
+    first_name: { type: String, required: true, trim: true },
+    last_name: { type: String, required: true, trim: true },
+    email: { type: String, trim: true, unique: true },
+    password: { type: String, required: true },
+    tokens: [{ token: { type: String, required: true } }],
+    avatar: { type: mongoose.Types.ObjectId, ref: 'Image' },
+  },
+  { toJSON: { virtuals: true }, toObject: { virtuals: true } },
+);
 
 userSchema.methods.generateAuthToken = async function () {
   const user = this;
@@ -26,6 +29,12 @@ userSchema.methods.generateAuthToken = async function () {
 userSchema.virtual('posts', {
   ref: 'Post',
   foreignField: 'author',
+  localField: '_id',
+});
+
+userSchema.virtual('likes', {
+  ref: 'Post',
+  foreignField: 'likes',
   localField: '_id',
 });
 

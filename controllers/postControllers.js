@@ -98,10 +98,12 @@ export const likePost = async (req, res, next) => {
   try {
     const post = await Post.findById(id);
 
+    //Find if the user has liked the post
     const hasLiked = post.likes.find(
       (like) => like.toString() === req.user._id.toString(),
     );
 
+    // If the user has liked this post then filter the user id from the like array else push the user id onto the array
     if (hasLiked) {
       post.likes = post.likes.filter(
         (like) => like.toString() !== req.user._id.toString(),
@@ -110,7 +112,7 @@ export const likePost = async (req, res, next) => {
       post.likes.push(req.user._id);
     }
 
-    await post.populate('likes', ['first_name', 'last_name']);
+    await post.populate('likes', ['first_name', 'last_name']); // Populate the likes array with the first and last name of the 'likers'
     await post.save();
     res.send(post);
   } catch (error) {}

@@ -8,6 +8,7 @@ import {
   logout,
   signup,
   update,
+  getUsers,
 } from '../controllers/userControllers.js';
 const router = express.Router();
 
@@ -18,6 +19,8 @@ router.post('/login', login);
 router.post('/logout', auth, logout);
 
 router.delete('/avatar', auth, deleteAvatar);
+
+router.get('/', getUsers);
 
 router.patch('/', auth, update);
 
