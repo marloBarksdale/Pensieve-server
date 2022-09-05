@@ -11,6 +11,7 @@ import multer from 'multer';
 import multerS3 from 'multer-sharp-s3';
 import sharp from 'sharp';
 import { auth } from './middleware/auth.js';
+import cors from 'cors';
 
 debug('pensieve-app:server');
 
@@ -61,7 +62,7 @@ const upload = multer({
 app.use(logger('dev'));
 app.use(Express.json());
 app.use(Express.urlencoded({ extended: true }));
-
+app.use(cors());
 app.use('/posts', auth, upload.single('image'), postRouter);
 app.use('/user', avatarUpload.single('avatar'), userRouter);
 app.use('/', postRouter);

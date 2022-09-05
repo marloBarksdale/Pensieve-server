@@ -16,7 +16,7 @@ const router = express.Router();
 
 router.post('/', addPost);
 
-router.get('/', auth, getPosts);
+router.get('/', getPosts);
 
 router.get('/:id', auth, getPost);
 
