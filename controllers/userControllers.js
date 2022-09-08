@@ -33,7 +33,7 @@ export const logout = async (req, res, next) => {
     );
 
     await req.user.save();
-    res.send('Logged out');
+    res.send({ message: 'Logged Out' });
   } catch (error) {}
 };
 
@@ -123,9 +123,9 @@ export const signup = async (req, res, next) => {
 
     const user = await new User(req.body).save();
 
-    const token = await user.generateAuthToken();
+    // const token = await user.generateAuthToken();
 
-    res.status(201).send({ user, token });
+    res.status(201).send({ user });
   } catch (error) {
     res.status(400).send(error);
   }

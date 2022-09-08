@@ -18,12 +18,12 @@ router.post('/', addPost);
 
 router.get('/', getPosts);
 
-router.get('/:id', auth, getPost);
+router.get('/:id', getPost);
 
-router.patch('/:id', auth, updatePost);
+router.patch('/:id', updatePost);
 
-router.patch('/:id/like', auth, likePost);
+router.patch('/:id/like', likePost);
 
-router.delete('/:id', auth, deletePost);
+router.delete('/:id', deletePost);
 
 export default router;

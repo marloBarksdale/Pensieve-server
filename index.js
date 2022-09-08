@@ -59,13 +59,21 @@ const upload = multer({
   }),
 });
 
+// app.use((req, res, next) => {
+//   res.setHeader('Access-Control-Allow-Origin', '*');
+//   res.setHeader('Access-Control-Allow-Methods', 'GET, POST,PUT,PATCH,DELETE');
+//   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
+//   next();
+// });
+app.use(cors());
 app.use(logger('dev'));
 app.use(Express.json());
 app.use(Express.urlencoded({ extended: true }));
-app.use(cors());
+
 app.use('/posts', auth, upload.single('image'), postRouter);
 app.use('/user', avatarUpload.single('avatar'), userRouter);
-app.use('/', postRouter);
+app.use('/', auth, postRouter);
 mongoose
   .connect(process.env.MONGODB, { dbName: 'pensieve' })
   .then(() => {
