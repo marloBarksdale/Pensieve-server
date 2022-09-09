@@ -12,6 +12,8 @@ import multerS3 from 'multer-sharp-s3';
 import sharp from 'sharp';
 import { auth } from './middleware/auth.js';
 import cors from 'cors';
+import compression from 'compression';
+import helmet from 'helmet';
 
 debug('pensieve-app:server');
 
@@ -66,7 +68,13 @@ const upload = multer({
 
 //   next();
 // });
+
+// app.use(function (req, res, next) {
+//   setTimeout(next, 2000);
+// });
 app.use(cors());
+app.use(helmet());
+app.use(compression());
 app.use(logger('dev'));
 app.use(Express.json());
 app.use(Express.urlencoded({ extended: true }));

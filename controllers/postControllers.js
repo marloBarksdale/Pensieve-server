@@ -6,10 +6,13 @@ import User from '../models/userModel.js';
 
 export const getPosts = async (req, res, next) => {
   try {
-    const posts = await Post.find().populate({
-      path: 'author',
-      select: 'first_name last_name',
-    });
+    const posts = await Post.find()
+      .populate({
+        path: 'author',
+        select: 'first_name last_name',
+      })
+      .populate({ path: 'image' })
+      .sort('-createdAt');
 
     res.status(200).send(posts);
   } catch (error) {}
@@ -20,7 +23,7 @@ export const addPost = async (req, res, next) => {
     let image = {};
     if (req.file) {
       image = new Image({
-        imageUrl: req.file.location,
+        imageUrl: req.file.Location,
         imageKey: req.file.key,
       });
 
