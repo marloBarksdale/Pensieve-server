@@ -1,19 +1,17 @@
-import debug from 'debug';
-import Express, { urlencoded } from 'express';
-import logger from 'morgan';
-import 'dotenv/config';
-import mongoose from 'mongoose';
-import Post from './models/postModel.js';
-import postRouter from './routes/postRoutes.js';
-import userRouter from './routes/userRoutes.js';
 import S3 from 'aws-sdk/clients/s3.js';
+import compression from 'compression';
+import cors from 'cors';
+import debug from 'debug';
+import 'dotenv/config';
+import Express from 'express';
+import helmet from 'helmet';
+import mongoose from 'mongoose';
+import logger from 'morgan';
 import multer from 'multer';
 import multerS3 from 'multer-sharp-s3';
-import sharp from 'sharp';
 import { auth } from './middleware/auth.js';
-import cors from 'cors';
-import compression from 'compression';
-import helmet from 'helmet';
+import postRouter from './routes/postRoutes.js';
+import userRouter from './routes/userRoutes.js';
 
 debug('pensieve-app:server');
 

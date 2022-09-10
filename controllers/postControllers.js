@@ -33,6 +33,7 @@ export const addPost = async (req, res, next) => {
     req.body.image = image?._id;
 
     const post = await new Post({ ...req.body, author: req.user._id }).save();
+
     await post.save();
 
     res.status(201).send(post);
@@ -48,7 +49,7 @@ export const getPost = async (req, res, next) => {
     if (!post) {
       return res.status(404).send('Post not found');
     }
-
+    await post.populate('image');
     return res.send(post);
   } catch (error) {
     res.status(500).send();
@@ -71,7 +72,7 @@ export const updatePost = async (req, res, next) => {
   let image = {};
   if (req.file) {
     image = await Image.findById(post?.image?._id);
-
+    console.log(req.file);
     if (image) {
       const s3Params = { Bucket: process.env.BUCKET, Key: image.imageKey };
       await s3.deleteObject(s3Params).promise();
@@ -79,7 +80,7 @@ export const updatePost = async (req, res, next) => {
     }
 
     image = new Image({
-      imageUrl: req.file.location,
+      imageUrl: req.file.Location,
       imageKey: req.file.key,
       post: post._id,
     });
@@ -95,7 +96,7 @@ export const updatePost = async (req, res, next) => {
       new: true,
     },
   );
-  console.log(newPost);
+  await newPost.populate('image');
   res.send(newPost);
 };
 
