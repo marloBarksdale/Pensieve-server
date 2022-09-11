@@ -50,6 +50,7 @@ export const getPost = async (req, res, next) => {
       return res.status(404).send('Post not found');
     }
     await post.populate('image');
+    await post.populate('author');
     return res.send(post);
   } catch (error) {
     res.status(500).send();

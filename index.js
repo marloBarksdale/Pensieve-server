@@ -67,9 +67,9 @@ const upload = multer({
 //   next();
 // });
 
-// app.use(function (req, res, next) {
-//   setTimeout(next, 2000);
-// });
+app.use(function (req, res, next) {
+  setTimeout(next, 1000);
+});
 app.use(cors());
 app.use(helmet());
 app.use(compression());
