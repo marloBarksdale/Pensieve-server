@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "serverstart": "DEBUG=memories-app:* npm run dev"
+    "serverstart": "DEBUG=pensieve-app:* npm run dev"
   },
   "dependencies": {
     "aws-sdk": "^2.1199.0",

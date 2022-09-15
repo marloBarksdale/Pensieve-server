@@ -12,6 +12,10 @@ export const getPosts = async (req, res, next) => {
         select: 'first_name last_name',
       })
       .populate({ path: 'image' })
+      .populate({
+        path: 'author',
+        populate: { path: 'avatar', select: 'imageUrl' },
+      })
       .sort('-createdAt');
 
     res.status(200).send(posts);

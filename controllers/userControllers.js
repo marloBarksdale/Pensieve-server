@@ -19,7 +19,7 @@ export const login = async (req, res, next) => {
     if (loggedIn) {
       const token = await user.generateAuthToken();
 
-      await user.populate('avatar');
+      await user.populate({ path: 'avatar', select: 'imageUrl' });
       res.status(200).send({ user, token });
     } else {
       res.status(400).send('Could not find user');
