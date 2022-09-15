@@ -19,6 +19,7 @@ export const login = async (req, res, next) => {
     if (loggedIn) {
       const token = await user.generateAuthToken();
 
+      await user.populate('avatar');
       res.status(200).send({ user, token });
     } else {
       res.status(400).send('Could not find user');
@@ -48,7 +49,7 @@ export const update = async (req, res, next) => {
     let image = {};
     if (req.file) {
       image = new Image({
-        imageUrl: req.file.location,
+        imageUrl: req.file.Location,
         imageKey: req.file.key,
         user: req.user._id,
       });
@@ -104,7 +105,7 @@ export const deleteAvatar = async (req, res, next) => {
 export const signup = async (req, res, next) => {
   try {
     const exists = await User.findOne({ email: req.body.email });
-
+    console.log('hello');
     if (exists) {
       return res.status(400).send('Cannot signup using that email');
     }
@@ -112,7 +113,7 @@ export const signup = async (req, res, next) => {
     let image = {};
     if (req.file) {
       image = new Image({
-        imageUrl: req.file.location,
+        imageUrl: req.file.Location,
         imageKey: req.file.key,
       });
 
