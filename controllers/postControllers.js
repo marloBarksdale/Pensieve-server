@@ -54,9 +54,6 @@ export const getPost = async (req, res, next) => {
     await post.populate('image');
     await post.populate('author');
 
-    const comments = await Comment.find({ post: req.params.id });
-
-    post.comments = comments;
     return res.send(post);
   } catch (error) {
     res.status(500).send();
