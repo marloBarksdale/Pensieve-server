@@ -26,4 +26,6 @@ router.patch('/:id/like', likePost);
 
 router.delete('/:id', deletePost);
 
+router.get('/:postId/comments');
+
 export default router;
