@@ -5,7 +5,9 @@ var commentSchema = new mongoose.Schema(
     message: String,
     post: { type: mongoose.Types.ObjectId, ref: 'Post', required: true },
     parent: { type: mongoose.Types.ObjectId, ref: 'Comment' },
+    author: { type: mongoose.Types.ObjectId, ref: 'User' },
   },
+
   { toJSON: { virtuals: true }, toObject: { virtuals: true } },
 );
 

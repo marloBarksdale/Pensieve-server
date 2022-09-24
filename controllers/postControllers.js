@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { s3 } from '../index.js';
+import Comment from '../models/commentModel.js';
 import Image from '../models/imageModel.js';
 import Post from '../models/postModel.js';
 import User from '../models/userModel.js';
@@ -52,6 +53,10 @@ export const getPost = async (req, res, next) => {
     }
     await post.populate('image');
     await post.populate('author');
+
+    const comments = await Comment.find({ post: req.params.id });
+
+    post.comments = comments;
     return res.send(post);
   } catch (error) {
     res.status(500).send();
