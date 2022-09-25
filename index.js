@@ -79,36 +79,6 @@ app.use(logger('dev'));
 app.use(Express.json());
 app.use(Express.urlencoded({ extended: true }));
 
-app.use('/posts/:postId/comments', async (req, res) => {
-  const comment = new Comment({
-    message: req.body.message,
-    post: req.params.postId,
-  });
-
-  await comment.save();
-
-  res.send(comment);
-});
-
-app.use('/reply/posts/:postId/comments/:commentId', async (req, res) => {
-  console.log(req.params);
-  const comment = new Comment({
-    message: req.body.message,
-    post: req.params.postId,
-    parent: req.params.commentId,
-  });
-
-  await comment.save();
-
-  res.send(comment);
-});
-
-app.use('/comments', async (req, res) => {
-  const comments = await Comment.find();
-
-  res.send(comments);
-});
-
 app.use('/posts', auth, upload.single('image'), postRouter);
 app.use('/user', avatarUpload.single('avatar'), userRouter);
 app.use('/', auth, postRouter);
