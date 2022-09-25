@@ -7,16 +7,22 @@ import User from '../models/userModel.js';
 
 export const getPosts = async (req, res, next) => {
   try {
-    const posts = await Post.find()
+    const posts = await Post.find({})
       .populate({
         path: 'author',
         select: 'first_name last_name',
       })
       .populate({ path: 'image' })
+      .populate('comments')
       .populate({ path: 'author', populate: { path: 'avatar' } })
       .sort('-createdAt');
 
-    res.status(200).send(posts);
+    const newPosts = posts.map((post) => {
+      return { ...post._doc, comments: post.comments };
+    });
+
+    console.log(newPosts);
+    res.status(200).json(newPosts);
   } catch (error) {}
 };
 

@@ -13,7 +13,15 @@ const postSchema = new mongoose.Schema(
     },
   },
   { timestamps: true },
+  { toJSON: { virtuals: true }, toObject: { virtuals: true } },
 );
+
+postSchema.virtual('comments', {
+  ref: 'Comment',
+  localField: '_id',
+  foreignField: 'post',
+  count: true,
+});
 
 postSchema.pre('save', async function (next) {
   const post = this;
