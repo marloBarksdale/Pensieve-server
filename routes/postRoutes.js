@@ -29,5 +29,6 @@ router.delete('/:id', deletePost);
 
 router.get('/:postId/comments', getComments);
 router.post('/:postId/comments', addComment);
+router.post('/:postId/comments/:commentId', addComment);
 
 export default router;
