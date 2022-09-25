@@ -10,6 +10,7 @@ import {
   likePost,
 } from '../controllers/postControllers.js';
 import { auth } from '../middleware/auth.js';
+import { getComments } from '../controllers/commentController.js';
 // import { upload } from '../index.js';
 
 const router = express.Router();
@@ -26,6 +27,6 @@ router.patch('/:id/like', likePost);
 
 router.delete('/:id', deletePost);
 
-router.get('/:postId/comments');
+router.get('/:postId/comments', getComments);
 
 export default router;

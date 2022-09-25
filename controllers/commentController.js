@@ -1,6 +1,6 @@
-import Comment from '../models/commentModel';
+import Comment from '../models/commentModel.js';
 
-const getComments = async (req, res, next) => {
+export const getComments = async (req, res, next) => {
   const postId = req.params.postId;
 
   const comments = await Comment.find({ post: postId });
